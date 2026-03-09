@@ -8,6 +8,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+const ADMIN_KEY = process.env.ADMIN_KEY || "";
 
 const doctors = [
   {
@@ -48,14 +49,25 @@ app.get("/api/doctors", (_req, res) => {
 });
 
 app.get("/api/appointments", (req, res) => {
-  const all = readAppointments();
   const phone = req.query.phone?.toString().trim();
 
   if (!phone) {
-    return res.json(all);
+    return res.status(400).json({ error: "phone query is required" });
   }
 
+  const all = readAppointments();
   return res.json(all.filter((item) => item.phone === phone));
+});
+
+app.get("/api/admin/appointments", (req, res) => {
+  const adminKey = req.headers["x-admin-key"]?.toString().trim();
+
+  if (!ADMIN_KEY || adminKey !== ADMIN_KEY) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const all = readAppointments();
+  return res.json(all);
 });
 
 app.post("/api/appointments", (req, res) => {

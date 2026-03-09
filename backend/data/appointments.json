@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": 1773049712950,
+    "patientName": "Test Patient",
+    "phone": "9998887776",
+    "email": "test@example.com",
+    "doctorId": 1,
+    "doctorName": "Dr. Priya Nair",
+    "date": "2026-03-12",
+    "message": "Follow-up visit",
+    "createdAt": "2026-03-09T09:48:32.950Z"
+  }
+]
