@@ -1,0 +1,170 @@
+:root {
+  --bg: #f5fbff;
+  --ink: #102233;
+  --ink-soft: #35536c;
+  --brand: #0f766e;
+  --brand-dark: #0a4d47;
+  --card: #ffffff;
+  --ring: #8ddad2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 20%, #c4f1ec 0%, transparent 28%),
+    radial-gradient(circle at 90% 0%, #c5ddff 0%, transparent 30%),
+    var(--bg);
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.hero {
+  padding: 4rem 1.25rem 2rem;
+}
+
+.hero-content {
+  max-width: 980px;
+  margin: 0 auto;
+  background: linear-gradient(130deg, #14324b, #0a4f68 62%, #0f766e);
+  color: #f3fcff;
+  border-radius: 28px;
+  padding: clamp(1.5rem, 2vw + 1rem, 3rem);
+  box-shadow: 0 24px 45px rgba(20, 50, 75, 0.25);
+}
+
+.eyebrow {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "DM Serif Display", serif;
+  margin: 0;
+}
+
+h1 {
+  margin-top: 0.35rem;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+}
+
+.hero-text {
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  background: #f6fafb;
+  color: #0d353f;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.panel {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 1.2rem;
+  box-shadow: 0 10px 28px rgba(27, 73, 91, 0.12);
+}
+
+.doctor-grid {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.doctor-card {
+  background: #f6fbff;
+  border: 1px solid #e2eef8;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.doctor-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.doctor-card div {
+  padding: 0.8rem;
+}
+
+.doctor-card p {
+  margin: 0.3rem 0;
+  color: var(--ink-soft);
+}
+
+.booking-form {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.booking-form input,
+.booking-form select,
+.booking-form textarea,
+.booking-form button {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid #c8dfec;
+  font: inherit;
+}
+
+.booking-form input:focus,
+.booking-form select:focus,
+.booking-form textarea:focus {
+  border-color: var(--ring);
+  outline: 2px solid #d1f5f1;
+}
+
+.booking-form button {
+  border: none;
+  background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.booking-form button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.result {
+  margin-top: 0.7rem;
+  color: var(--brand-dark);
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding-top: 1rem;
+  }
+}

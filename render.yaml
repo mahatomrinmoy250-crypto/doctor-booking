@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: carepoint-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: CORS_ORIGIN
+        value: https://your-frontend-domain.vercel.app
+
+  - type: static
+    name: carepoint-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://carepoint-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
