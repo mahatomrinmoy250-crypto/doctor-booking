@@ -1,18 +1,19 @@
 :root {
-  --bg: #f2ece4;
-  --bg-deep: #1c2c36;
-  --surface: rgba(255, 250, 245, 0.8);
+  --bg: #f3ede5;
+  --bg-deep: #18262f;
+  --bg-mid: #223743;
+  --surface: rgba(255, 251, 246, 0.82);
   --surface-strong: #fffaf5;
-  --surface-dark: #223844;
-  --ink: #16242c;
-  --ink-soft: #5e6f79;
-  --line: rgba(28, 44, 54, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.14);
-  --accent: #c78d52;
-  --accent-soft: #ebd4ba;
-  --mint: #bdd9d2;
-  --success: #27625b;
-  --shadow-lg: 0 30px 80px rgba(17, 26, 33, 0.12);
+  --surface-dark: rgba(255, 255, 255, 0.06);
+  --ink: #142029;
+  --ink-soft: #667983;
+  --ink-light: rgba(255, 248, 242, 0.78);
+  --line: rgba(20, 32, 41, 0.1);
+  --line-light: rgba(255, 255, 255, 0.1);
+  --accent: #c9894c;
+  --accent-soft: #ead3bb;
+  --success: #245e59;
+  --shadow-lg: 0 34px 80px rgba(17, 26, 33, 0.12);
   --shadow-md: 0 18px 40px rgba(17, 26, 33, 0.08);
   --radius-xl: 34px;
   --radius-lg: 24px;
@@ -32,9 +33,9 @@ body {
   font-family: "Manrope", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(199, 141, 82, 0.16), transparent 26%),
-    radial-gradient(circle at top right, rgba(97, 142, 156, 0.12), transparent 22%),
-    linear-gradient(180deg, #f6f1ea 0%, #efe7dc 100%);
+    radial-gradient(circle at top left, rgba(201, 137, 76, 0.16), transparent 24%),
+    radial-gradient(circle at top right, rgba(96, 135, 149, 0.11), transparent 24%),
+    linear-gradient(180deg, #f7f1e8 0%, #efe5d8 100%);
 }
 
 a {
@@ -64,29 +65,30 @@ textarea {
 .ambient {
   position: fixed;
   border-radius: 999px;
-  filter: blur(40px);
+  filter: blur(46px);
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.42;
 }
 
 .ambient-one {
-  top: 60px;
-  right: -60px;
-  width: 220px;
-  height: 220px;
-  background: rgba(199, 141, 82, 0.24);
+  top: 70px;
+  right: -80px;
+  width: 240px;
+  height: 240px;
+  background: rgba(201, 137, 76, 0.26);
 }
 
 .ambient-two {
-  left: -70px;
-  bottom: 120px;
+  left: -90px;
+  bottom: 100px;
   width: 260px;
   height: 260px;
-  background: rgba(132, 173, 166, 0.2);
+  background: rgba(112, 156, 149, 0.2);
 }
 
 .topbar,
-main {
+main,
+.site-footer {
   position: relative;
   z-index: 1;
   max-width: 1240px;
@@ -114,7 +116,7 @@ main {
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #1b313c, #2d4858);
+  background: linear-gradient(135deg, #172832, #2d4858);
   color: #fff7f1;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -129,6 +131,10 @@ main {
 .brandmark small {
   display: block;
   color: var(--ink-soft);
+}
+
+.admin-topbar .brandmark small {
+  color: var(--ink-light);
 }
 
 .topnav {
@@ -162,14 +168,15 @@ main {
 main {
   display: grid;
   gap: 28px;
-  padding-bottom: 40px;
+  padding-bottom: 24px;
 }
 
 .hero-panel,
 .editorial-strip,
 .specialists-panel,
 .workspace-card,
-.owner-suite {
+.admin-hero,
+.site-footer {
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
@@ -189,15 +196,19 @@ main {
 .hero-copy h1,
 .editorial-strip h2,
 .section-header h2,
-.owner-header h2 {
+.admin-hero h1,
+.admin-login-card h2,
+.admin-side-card h2,
+.admin-controls-card h2 {
   margin: 0;
   font-family: "DM Serif Display", serif;
   line-height: 1.02;
 }
 
-.hero-copy h1 {
-  font-size: clamp(3rem, 5vw, 5.3rem);
-  max-width: 11ch;
+.hero-copy h1,
+.admin-hero h1 {
+  font-size: clamp(3rem, 5vw, 5.1rem);
+  max-width: 12ch;
 }
 
 .kicker {
@@ -214,8 +225,9 @@ main {
 .section-meta,
 .service-card p,
 .doctor-body p,
+.feature-list,
 .empty-state p {
-  color: rgba(255, 248, 242, 0.72);
+  color: var(--ink-light);
 }
 
 .hero-summary {
@@ -240,7 +252,8 @@ main {
 .button-primary,
 .button-secondary,
 .button-tertiary,
-button {
+button,
+.staff-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -256,27 +269,30 @@ button {
   border: none;
   background: linear-gradient(135deg, #d39a5d, #b67c43);
   color: #fffaf4;
-  box-shadow: 0 16px 32px rgba(199, 141, 82, 0.28);
+  box-shadow: 0 16px 32px rgba(201, 137, 76, 0.24);
   cursor: pointer;
 }
 
 .button-secondary {
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line-light);
   color: #fff8f2;
   background: rgba(255, 255, 255, 0.05);
 }
 
-.button-tertiary {
-  background: rgba(28, 44, 54, 0.06);
+.button-tertiary,
+.staff-link {
+  background: rgba(20, 32, 41, 0.06);
   color: var(--ink);
   border: 1px solid var(--line);
   box-shadow: none;
+  cursor: pointer;
 }
 
 .button-primary:hover,
 .button-secondary:hover,
 .button-tertiary:hover,
-button:hover {
+button:hover,
+.staff-link:hover {
   transform: translateY(-1px);
 }
 
@@ -292,14 +308,15 @@ button:hover {
 .service-card,
 .stat-card,
 .appointment-card,
-.empty-state {
+.empty-state,
+.admin-hero-chip {
   border-radius: var(--radius-md);
 }
 
 .proof-card {
   padding: 18px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line-light);
 }
 
 .proof-card strong {
@@ -322,7 +339,7 @@ button:hover {
 .hours-card {
   padding: 24px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line-light);
 }
 
 .executive-card h2 {
@@ -336,7 +353,6 @@ button:hover {
   padding-left: 18px;
   display: grid;
   gap: 10px;
-  color: rgba(255, 248, 242, 0.8);
 }
 
 .hours-card span {
@@ -358,15 +374,14 @@ button:hover {
 
 .editorial-strip,
 .specialists-panel,
-.owner-suite,
-.workspace-card {
+.workspace-card,
+.site-footer {
   background: rgba(255, 250, 245, 0.7);
   backdrop-filter: blur(12px);
 }
 
 .editorial-strip,
-.specialists-panel,
-.owner-suite {
+.specialists-panel {
   padding: 34px;
 }
 
@@ -379,7 +394,9 @@ button:hover {
 
 .editorial-strip h2,
 .section-header h2,
-.owner-header h2 {
+.admin-login-card h2,
+.admin-side-card h2,
+.admin-controls-card h2 {
   color: var(--ink);
   font-size: clamp(2rem, 3vw, 3rem);
 }
@@ -393,10 +410,12 @@ button:hover {
 .service-card {
   padding: 22px;
   background: linear-gradient(180deg, rgba(255, 250, 245, 0.95), rgba(247, 239, 231, 0.9));
-  border: 1px solid rgba(28, 44, 54, 0.08);
+  border: 1px solid rgba(20, 32, 41, 0.08);
 }
 
-.service-card h3 {
+.service-card h3,
+.doctor-body h3,
+.table-header h3 {
   margin: 0 0 10px;
   font-family: "DM Serif Display", serif;
   font-size: 1.45rem;
@@ -408,8 +427,11 @@ button:hover {
 .muted,
 .appointment-card span,
 .appointment-card small,
-.empty-state p,
-.table-header p {
+.table-header p,
+.site-footer p,
+.brandmark small,
+.doctor-body span,
+.dark-muted {
   color: var(--ink-soft);
 }
 
@@ -437,7 +459,7 @@ button:hover {
 .premium-card {
   overflow: hidden;
   background: var(--surface-strong);
-  border: 1px solid rgba(28, 44, 54, 0.08);
+  border: 1px solid rgba(20, 32, 41, 0.08);
   border-radius: 28px;
   box-shadow: var(--shadow-md);
 }
@@ -467,8 +489,6 @@ button:hover {
 }
 
 .doctor-body h3 {
-  margin: 0;
-  font-family: "DM Serif Display", serif;
   font-size: 1.55rem;
 }
 
@@ -487,7 +507,8 @@ button:hover {
 }
 
 .workspace-grid,
-.owner-grid {
+.admin-login-layout,
+.admin-summary-grid {
   display: grid;
   gap: 22px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -499,15 +520,11 @@ button:hover {
 }
 
 .booking-card {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 245, 0.98), rgba(245, 235, 225, 0.86));
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.98), rgba(245, 235, 225, 0.86));
 }
 
-.lookup-card,
-.owner-login-card,
-.owner-table-card {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 245, 0.92), rgba(238, 247, 245, 0.9));
+.lookup-card {
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.92), rgba(238, 247, 245, 0.9));
 }
 
 .booking-form,
@@ -523,7 +540,7 @@ button:hover {
   width: 100%;
   padding: 16px 18px;
   border-radius: 18px;
-  border: 1px solid rgba(28, 44, 54, 0.1);
+  border: 1px solid rgba(20, 32, 41, 0.1);
   background: rgba(255, 255, 255, 0.86);
   color: var(--ink);
 }
@@ -533,8 +550,8 @@ button:hover {
 .booking-form textarea:focus,
 .admin-form input:focus {
   outline: none;
-  border-color: rgba(199, 141, 82, 0.55);
-  box-shadow: 0 0 0 4px rgba(199, 141, 82, 0.12);
+  border-color: rgba(201, 137, 76, 0.55);
+  box-shadow: 0 0 0 4px rgba(201, 137, 76, 0.12);
 }
 
 .full-width {
@@ -555,7 +572,7 @@ button:hover {
 
 .appointment-card {
   padding: 18px;
-  border: 1px solid rgba(28, 44, 54, 0.08);
+  border: 1px solid rgba(20, 32, 41, 0.08);
   background: rgba(255, 255, 255, 0.82);
 }
 
@@ -566,39 +583,99 @@ button:hover {
   margin-bottom: 6px;
 }
 
-.owner-suite {
-  background:
-    linear-gradient(180deg, rgba(25, 42, 50, 0.98), rgba(32, 53, 64, 0.98));
-  border-color: rgba(255, 255, 255, 0.08);
-  color: #fff8f2;
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 22px 28px;
+  margin-top: 8px;
 }
 
-.owner-suite .owner-header h2,
-.owner-suite .kicker,
-.owner-suite .section-meta,
-.owner-suite .muted,
-.owner-suite .table-header p,
-.owner-suite .empty-state p {
-  color: rgba(255, 248, 242, 0.76);
-}
-
-.owner-suite .kicker {
-  color: var(--accent);
-}
-
-.owner-login-card,
-.owner-table-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.owner-login-card h3,
-.owner-table-card h3,
-.table-header h3 {
-  margin: 0 0 8px;
+.site-footer strong {
+  display: block;
   font-family: "DM Serif Display", serif;
-  font-size: 1.7rem;
+  font-size: 1.35rem;
+}
+
+.site-footer p {
+  margin: 6px 0 0;
+}
+
+.admin-shell {
+  background:
+    radial-gradient(circle at top right, rgba(201, 137, 76, 0.12), transparent 24%),
+    linear-gradient(180deg, #13212a, #1a2d37 100%);
+}
+
+.admin-shell .brandmark strong,
+.admin-shell .topbar,
+.admin-shell .admin-hero,
+.admin-shell .admin-login-card,
+.admin-shell .admin-side-card,
+.admin-shell .admin-controls-card,
+.admin-shell .admin-summary-card,
+.admin-shell .admin-table-card,
+.admin-shell .table-header h3 {
   color: #fff8f2;
+}
+
+.admin-shell .button-tertiary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-light);
+  color: #fff8f2;
+}
+
+.admin-hero,
+.admin-login-card,
+.admin-side-card,
+.admin-controls-card,
+.admin-summary-card,
+.admin-table-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-light);
+}
+
+.admin-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  padding: 36px;
+}
+
+.admin-hero .hero-summary,
+.admin-hero .dark-muted,
+.admin-shell .section-meta,
+.admin-shell .table-header p,
+.admin-shell .appointment-card span,
+.admin-shell .appointment-card small,
+.admin-shell .dark-list,
+.admin-shell .dark-muted {
+  color: var(--ink-light);
+}
+
+.admin-hero-chip {
+  min-width: 240px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-light);
+}
+
+.admin-hero-chip span {
+  display: block;
+  color: var(--ink-light);
+}
+
+.admin-hero-chip strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.2rem;
+}
+
+.admin-dashboard {
+  display: grid;
+  gap: 22px;
 }
 
 .owner-actions {
@@ -615,13 +692,16 @@ button:hover {
 
 .stat-card {
   padding: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-card-dark {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-light);
 }
 
 .stat-card span {
   display: block;
-  color: rgba(255, 248, 242, 0.7);
+  color: var(--ink-light);
 }
 
 .stat-card strong {
@@ -631,6 +711,11 @@ button:hover {
   color: #fff8f2;
 }
 
+.appointment-card-dark {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-light);
+}
+
 .table-header {
   margin-bottom: 16px;
 }
@@ -638,14 +723,14 @@ button:hover {
 .admin-table-wrap {
   overflow-x: auto;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line-light);
 }
 
 .admin-table {
   width: 100%;
   min-width: 800px;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .admin-table th,
@@ -665,18 +750,13 @@ button:hover {
   color: rgba(255, 248, 242, 0.68);
 }
 
-.empty-state {
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-}
-
 @media (max-width: 1080px) {
   .hero-panel,
   .editorial-strip,
   .workspace-grid,
-  .owner-grid,
-  .premium-grid {
+  .premium-grid,
+  .admin-login-layout,
+  .admin-summary-grid {
     grid-template-columns: 1fr;
   }
 
@@ -684,6 +764,11 @@ button:hover {
   .service-grid,
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-hero {
+    flex-direction: column;
+    align-items: start;
   }
 }
 
@@ -695,7 +780,8 @@ button:hover {
   .topbar,
   .section-header,
   .owner-actions,
-  .appointment-row {
+  .appointment-row,
+  .site-footer {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -704,11 +790,13 @@ button:hover {
   .editorial-strip,
   .specialists-panel,
   .workspace-card,
-  .owner-suite {
+  .admin-hero,
+  .site-footer {
     padding: 24px;
   }
 
-  .hero-copy h1 {
+  .hero-copy h1,
+  .admin-hero h1 {
     max-width: none;
     font-size: 2.65rem;
   }
