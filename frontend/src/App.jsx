@@ -15,23 +15,23 @@ const emptyForm = {
 
 const services = [
   {
-    title: "Preventive Medicine",
-    copy: "Executive checkups, screening plans, and long-view health strategy."
+    title: "Primary and Specialist Care",
+    copy: "Fast routing to trusted clinicians with a refined digital intake experience."
   },
   {
-    title: "Specialist Access",
-    copy: "Fast routing to trusted clinicians without a cluttered booking experience."
+    title: "Preventive Health Planning",
+    copy: "Screenings, checkups, and continuity programs for long-term wellness."
   },
   {
-    title: "Continuity of Care",
-    copy: "Digital intake and follow-up visibility that keeps care calm and coordinated."
+    title: "Follow-Up Coordination",
+    copy: "A calmer path from first visit to next appointment with fewer patient touchpoints."
   }
 ];
 
-const proofPoints = [
-  { value: "15+", label: "Years of clinical trust" },
-  { value: "12k", label: "Consultations delivered" },
-  { value: "4.9/5", label: "Average patient rating" }
+const trustItems = [
+  "Specialist-led consultations",
+  "Same-site patient booking and lookup",
+  "Private owner dashboard for operations"
 ];
 
 function getCurrentView() {
@@ -240,85 +240,77 @@ export default function App() {
           </a>
           <nav className="topnav">
             <a href="#specialists">Specialists</a>
-            <a href="#booking">Booking</a>
-            <a href="#lookup">Check Booking</a>
+            <a href="#booking">Book</a>
+            <a href="#lookup">Track</a>
           </nav>
         </header>
 
         <main>
-          <section className="hero-panel" id="home">
-            <div className="hero-copy">
-              <p className="kicker">Modern Clinical Experience</p>
-              <h1>Private medical care designed with the polish patients expect today.</h1>
-              <p className="hero-summary">
-                A premium digital front door for serious care: elegant booking, specialist visibility,
-                and a patient experience that feels calm, fast, and trustworthy.
+          <section className="hero-shell" id="home">
+            <div className="hero-intro">
+              <p className="eyebrow">CarePoint Clinic</p>
+              <h1>Calm, modern care with a booking experience patients can trust.</h1>
+              <p className="lead">
+                A premium clinic website that feels professional from the first screen:
+                clean specialist discovery, direct online booking, and simple appointment lookup.
               </p>
               <div className="hero-actions">
                 <a href="#booking" className="button-primary">Book Consultation</a>
-                <a href="#specialists" className="button-secondary">View Specialists</a>
-              </div>
-              <div className="hero-proof">
-                {proofPoints.map((item) => (
-                  <div key={item.label} className="proof-card">
-                    <strong>{item.value}</strong>
-                    <span>{item.label}</span>
-                  </div>
-                ))}
+                <a href="#specialists" className="button-secondary">View Doctors</a>
               </div>
             </div>
 
-            <aside className="hero-aside">
-              <div className="executive-card">
-                <p className="kicker">Patient Promise</p>
-                <h2>Clean digital access without the chaos of old-school hospital websites.</h2>
-                <ul className="feature-list">
-                  <li>Specialist-first booking flow</li>
-                  <li>Easy appointment verification by phone</li>
-                  <li>Luxury-style visual language with clear trust signals</li>
+            <div className="hero-side">
+              <article className="trust-panel">
+                <p className="eyebrow">Why It Works</p>
+                <ul className="trust-list">
+                  {trustItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
                 </ul>
-              </div>
-              <div className="hours-card">
-                <span>Appointments accepted</span>
-                <strong>Mon-Sat</strong>
-                <p>08:00 AM to 08:00 PM</p>
-              </div>
-            </aside>
+              </article>
+              <article className="micro-stats">
+                <div>
+                  <strong>15+</strong>
+                  <span>years of trust</span>
+                </div>
+                <div>
+                  <strong>12k</strong>
+                  <span>consultations</span>
+                </div>
+                <div>
+                  <strong>4.9/5</strong>
+                  <span>patient rating</span>
+                </div>
+              </article>
+            </div>
           </section>
 
-          <section className="editorial-strip">
-            <div>
-              <p className="kicker">Why It Feels Different</p>
-              <h2>Built to feel closer to a modern private healthcare brand than a local clinic template.</h2>
-            </div>
-            <div className="service-grid">
-              {services.map((service) => (
-                <article key={service.title} className="service-card">
-                  <h3>{service.title}</h3>
-                  <p>{service.copy}</p>
-                </article>
-              ))}
-            </div>
+          <section className="info-band">
+            {services.map((service) => (
+              <article key={service.title} className="info-card">
+                <h2>{service.title}</h2>
+                <p>{service.copy}</p>
+              </article>
+            ))}
           </section>
 
           <section className="specialists-panel" id="specialists">
             <div className="section-header">
               <div>
-                <p className="kicker">Specialists</p>
-                <h2>Doctors introduced with clarity, hierarchy, and confidence.</h2>
+                <p className="eyebrow">Clinical Team</p>
+                <h2>Specialists presented with clearer hierarchy and stronger trust.</h2>
               </div>
               <p className="section-meta">
                 {loadingDoctors ? "Loading doctors..." : `${doctors.length} specialists available`}
               </p>
             </div>
 
-            <div className="doctor-grid premium-grid">
+            <div className="doctor-grid">
               {doctors.map((doctor) => (
-                <article key={doctor.id} className="doctor-card premium-card">
-                  <div className="doctor-media">
-                    <img src={doctor.image} alt={doctor.name} loading="lazy" />
-                  </div>
-                  <div className="doctor-body">
+                <article key={doctor.id} className="doctor-card">
+                  <img src={doctor.image} alt={doctor.name} loading="lazy" />
+                  <div className="doctor-copy">
                     <p className="doctor-tag">{doctor.specialty}</p>
                     <h3>{doctor.name}</h3>
                     <p>{doctor.experience} of focused experience</p>
@@ -329,14 +321,14 @@ export default function App() {
             </div>
           </section>
 
-          <section className="workspace-grid" id="booking">
-            <section className="workspace-card booking-card">
+          <section className="portal-grid">
+            <section className="workspace-card booking-card" id="booking">
               <div className="section-header compact">
                 <div>
-                  <p className="kicker">Patients</p>
-                  <h2>Book an Appointment</h2>
+                  <p className="eyebrow">Patient Booking</p>
+                  <h2>Request an Appointment</h2>
                 </div>
-                <p className="section-meta">A premium intake experience with zero clutter</p>
+                <p className="section-meta">Simple intake, no clutter</p>
               </div>
               <form onSubmit={handleSubmit} className="booking-form">
                 <input
@@ -390,10 +382,10 @@ export default function App() {
             <section className="workspace-card lookup-card" id="lookup">
               <div className="section-header compact">
                 <div>
-                  <p className="kicker">Self Service</p>
-                  <h2>Check My Booking</h2>
+                  <p className="eyebrow">Booking Lookup</p>
+                  <h2>Check My Appointment</h2>
                 </div>
-                <p className="section-meta">Patients can verify appointments instantly</p>
+                <p className="section-meta">Verify by phone number</p>
               </div>
               <form onSubmit={handlePatientLookup} className="booking-form">
                 <input
@@ -403,7 +395,7 @@ export default function App() {
                   onChange={(e) => setLookupPhone(e.target.value)}
                 />
                 <button type="submit" className="full-width" disabled={lookupLoading}>
-                  {lookupLoading ? "Checking..." : "Find Appointments"}
+                  {lookupLoading ? "Checking..." : "Find Appointment"}
                 </button>
               </form>
               {lookupResult ? <p className="result">{lookupResult}</p> : null}
@@ -429,7 +421,7 @@ export default function App() {
             <p>Private, specialist-led care with a modern patient experience.</p>
           </div>
           <button type="button" className="staff-link" onClick={() => navigateTo("/admin", setView)}>
-            Clinic staff access
+            Staff access
           </button>
         </footer>
       </div>
@@ -439,168 +431,188 @@ export default function App() {
   function renderAdminSite() {
     return (
       <div className="shell admin-shell">
-        <div className="ambient ambient-one" />
-        <div className="ambient ambient-two" />
-
-        <header className="topbar admin-topbar">
-          <a href="/" className="brandmark" onClick={(e) => { e.preventDefault(); navigateTo("/", setView); }}>
-            <span className="brandmark-chip">CP</span>
-            <span>
-              <strong>CarePoint Owner Console</strong>
-              <small>Private operational dashboard</small>
-            </span>
-          </a>
-          <button type="button" className="button-tertiary" onClick={() => navigateTo("/", setView)}>
-            Back to Website
-          </button>
-        </header>
-
-        <main>
-          <section className="admin-hero">
-            <div>
-              <p className="kicker">Owner Dashboard</p>
-              <h1>Operational control without exposing admin tools to patients.</h1>
-              <p className="hero-summary">
-                This is the private clinic console. Patients should never land here during normal browsing,
-                and the full dashboard appears only after owner login.
-              </p>
+        <div className="admin-layout">
+          <aside className="admin-sidebar">
+            <div className="admin-brand">
+              <span className="brandmark-chip">CP</span>
+              <div>
+                <strong>CarePoint Ops</strong>
+                <small>Owner console</small>
+              </div>
             </div>
-            <div className="admin-hero-chip">
-              <span>Secure area</span>
-              <strong>{adminToken ? `Logged in as ${adminName}` : "Authentication required"}</strong>
-            </div>
-          </section>
 
-          {!adminToken ? (
-            <section className="admin-login-layout">
-              <section className="workspace-card admin-login-card">
-                <p className="kicker">Sign In</p>
-                <h2>Owner Login</h2>
-                <p className="muted dark-muted">
-                  Use owner credentials to unlock the appointment dashboard.
+            <div className="admin-sidebar-block">
+              <span className="sidebar-label">Workspace</span>
+              <a href="/admin" className="sidebar-link active">Dashboard</a>
+              <button type="button" className="sidebar-link" onClick={() => navigateTo("/", setView)}>
+                Public website
+              </button>
+            </div>
+
+            <div className="admin-sidebar-block">
+              <span className="sidebar-label">Status</span>
+              <div className="status-chip">{adminToken ? `Signed in as ${adminName}` : "Login required"}</div>
+              <div className="status-note">Private operations area for the clinic owner only.</div>
+            </div>
+          </aside>
+
+          <main className="admin-main">
+            <section className="admin-header">
+              <div>
+                <p className="eyebrow">Owner Dashboard</p>
+                <h1>Bookings, daily overview, and operational visibility.</h1>
+                <p className="lead admin-lead">
+                  Enterprise-style dashboard layout with separate login and data workspace.
                 </p>
-                <form onSubmit={handleAdminLogin} className="admin-form">
-                  <input
-                    required
-                    placeholder="Admin username"
-                    value={adminCredentials.username}
-                    onChange={(e) => setAdminCredentials({ ...adminCredentials, username: e.target.value })}
-                  />
-                  <input
-                    required
-                    type="password"
-                    placeholder="Admin password"
-                    value={adminCredentials.password}
-                    onChange={(e) => setAdminCredentials({ ...adminCredentials, password: e.target.value })}
-                  />
-                  <button type="submit" className="full-width" disabled={adminLoading}>
-                    {adminLoading ? "Signing in..." : "Login to Dashboard"}
-                  </button>
-                </form>
-                {adminResult ? <p className="result">{adminResult}</p> : null}
-              </section>
-
-              <section className="workspace-card admin-side-card">
-                <p className="kicker">What Owner Sees</p>
-                <h2>Today’s count, upcoming appointments, and the complete booking register.</h2>
-                <ul className="feature-list dark-list">
-                  <li>Today bookings summary</li>
-                  <li>Upcoming schedule visibility</li>
-                  <li>Live appointment table after login</li>
-                </ul>
-              </section>
-            </section>
-          ) : (
-            <section className="admin-dashboard">
-              <section className="workspace-card admin-controls-card">
-                <div className="owner-actions">
-                  <div>
-                    <p className="kicker">Signed In</p>
-                    <h2>Welcome, {adminName}</h2>
-                    <p className="muted dark-muted">Refresh data anytime or sign out securely.</p>
-                  </div>
-                  <div className="admin-toolbar">
+              </div>
+              <div className="admin-header-actions">
+                {adminToken ? (
+                  <>
                     <button type="button" onClick={() => loadAdminAppointments(adminToken)} disabled={adminLoading}>
-                      {adminLoading ? "Refreshing..." : "Refresh Appointments"}
+                      {adminLoading ? "Refreshing..." : "Refresh"}
                     </button>
-                    <button type="button" className="button-tertiary" onClick={handleAdminLogout}>
+                    <button type="button" className="button-tertiary admin-ghost" onClick={handleAdminLogout}>
                       Logout
                     </button>
+                  </>
+                ) : (
+                  <button type="button" className="button-tertiary admin-ghost" onClick={() => navigateTo("/", setView)}>
+                    Back to site
+                  </button>
+                )}
+              </div>
+            </section>
+
+            {!adminToken ? (
+              <section className="admin-login-grid">
+                <section className="admin-panel admin-login-panel">
+                  <div className="panel-head">
+                    <h2>Sign In</h2>
+                    <p>Use owner credentials to open the operations console.</p>
                   </div>
-                </div>
-                {adminResult ? <p className="result">{adminResult}</p> : null}
-                <div className="stats-grid">
-                  <article className="stat-card stat-card-dark">
+                  <form onSubmit={handleAdminLogin} className="admin-form">
+                    <input
+                      required
+                      placeholder="Admin username"
+                      value={adminCredentials.username}
+                      onChange={(e) => setAdminCredentials({ ...adminCredentials, username: e.target.value })}
+                    />
+                    <input
+                      required
+                      type="password"
+                      placeholder="Admin password"
+                      value={adminCredentials.password}
+                      onChange={(e) => setAdminCredentials({ ...adminCredentials, password: e.target.value })}
+                    />
+                    <button type="submit" className="full-width" disabled={adminLoading}>
+                      {adminLoading ? "Signing in..." : "Login to Dashboard"}
+                    </button>
+                  </form>
+                  {adminResult ? <p className="result">{adminResult}</p> : null}
+                </section>
+
+                <section className="admin-panel admin-preview-panel">
+                  <div className="panel-head">
+                    <h2>Owner View</h2>
+                    <p>After login the owner sees KPI cards, today's bookings, and the full appointment register.</p>
+                  </div>
+                  <div className="preview-stack">
+                    <div className="preview-metric">
+                      <span>Today's bookings</span>
+                      <strong>Live</strong>
+                    </div>
+                    <div className="preview-metric">
+                      <span>Upcoming</span>
+                      <strong>Tracked</strong>
+                    </div>
+                    <div className="preview-metric">
+                      <span>Patient details</span>
+                      <strong>Visible</strong>
+                    </div>
+                  </div>
+                </section>
+              </section>
+            ) : (
+              <>
+                <section className="kpi-grid">
+                  <article className="kpi-card">
                     <span>Total bookings</span>
                     <strong>{adminAppointments.length}</strong>
+                    <small>All requests in the system</small>
                   </article>
-                  <article className="stat-card stat-card-dark">
+                  <article className="kpi-card">
                     <span>Today</span>
                     <strong>{todayAppointments.length}</strong>
+                    <small>Bookings scheduled for today</small>
                   </article>
-                  <article className="stat-card stat-card-dark">
+                  <article className="kpi-card">
                     <span>Upcoming</span>
                     <strong>{upcomingAppointments.length}</strong>
+                    <small>Today and future appointments</small>
                   </article>
-                </div>
-              </section>
-
-              <section className="admin-summary-grid">
-                <section className="workspace-card admin-summary-card">
-                  <p className="kicker">Today Bookings</p>
-                  <h2>{todayAppointments.length ? "Today’s schedule is ready." : "No bookings scheduled for today."}</h2>
-                  <div className="appointment-list">
-                    {todayAppointments.map((item) => (
-                      <article key={item.id} className="appointment-card appointment-card-dark">
-                        <div className="appointment-row">
-                          <strong>{item.patientName}</strong>
-                          <span>{item.date}</span>
-                        </div>
-                        <span>{item.doctorName}</span>
-                        <small>{item.phone}</small>
-                      </article>
-                    ))}
-                  </div>
                 </section>
 
-                <section className="workspace-card admin-table-card">
-                  <div className="table-header">
-                    <h3>Appointment Register</h3>
-                    <p className="muted dark-muted">Full booking visibility after successful owner login.</p>
-                  </div>
-                  <div className="admin-table-wrap">
-                    <table className="admin-table">
-                      <thead>
-                        <tr>
-                          <th>Patient</th>
-                          <th>Doctor</th>
-                          <th>Date</th>
-                          <th>Phone</th>
-                          <th>Email</th>
-                          <th>Message</th>
-                          <th>Created</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {adminAppointments.map((item) => (
-                          <tr key={item.id}>
-                            <td>{item.patientName}</td>
-                            <td>{item.doctorName}</td>
-                            <td>{item.date}</td>
-                            <td>{item.phone}</td>
-                            <td>{item.email || "-"}</td>
-                            <td>{item.message || "-"}</td>
-                            <td>{new Date(item.createdAt).toLocaleString()}</td>
+                {adminResult ? <p className="result admin-result">{adminResult}</p> : null}
+
+                <section className="admin-data-grid">
+                  <section className="admin-panel today-panel">
+                    <div className="panel-head">
+                      <h2>Today's Bookings</h2>
+                      <p>{todayAppointments.length ? "Focused schedule for the current day." : "No appointments scheduled for today."}</p>
+                    </div>
+                    <div className="appointment-list">
+                      {todayAppointments.map((item) => (
+                        <article key={item.id} className="appointment-card appointment-card-dark">
+                          <div className="appointment-row">
+                            <strong>{item.patientName}</strong>
+                            <span>{item.date}</span>
+                          </div>
+                          <span>{item.doctorName}</span>
+                          <small>{item.phone}</small>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="admin-panel register-panel">
+                    <div className="panel-head">
+                      <h2>Appointment Register</h2>
+                      <p>Full booking visibility after successful owner login.</p>
+                    </div>
+                    <div className="admin-table-wrap">
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>Created</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {adminAppointments.map((item) => (
+                            <tr key={item.id}>
+                              <td>{item.patientName}</td>
+                              <td>{item.doctorName}</td>
+                              <td>{item.date}</td>
+                              <td>{item.phone}</td>
+                              <td>{item.email || "-"}</td>
+                              <td>{item.message || "-"}</td>
+                              <td>{new Date(item.createdAt).toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
                 </section>
-              </section>
-            </section>
-          )}
-        </main>
+              </>
+            )}
+          </main>
+        </div>
       </div>
     );
   }
