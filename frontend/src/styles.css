@@ -214,6 +214,13 @@ main {
   gap: 0.75rem;
 }
 
+.admin-toolbar {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .booking-form input,
 .booking-form select,
 .booking-form textarea,
@@ -243,6 +250,13 @@ button {
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 12px 20px rgba(15, 118, 110, 0.18);
+}
+
+.secondary-button {
+  background: #e8f1f7;
+  color: var(--ink);
+  box-shadow: none;
+  border: 1px solid var(--line);
 }
 
 .cta:hover,

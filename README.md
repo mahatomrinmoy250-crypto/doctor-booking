@@ -12,7 +12,7 @@ This project includes:
 - Doctors listing from backend API
 - Appointment booking form
 - Patient self-check by phone number
-- Admin dashboard for viewing all appointments with a backend admin key
+- Admin dashboard with owner username/password login
 - Appointment storage to JSON (`backend/data/appointments.json`)
 - Health endpoint: `/api/health`
 
@@ -41,7 +41,9 @@ Copy env examples before running:
 Backend env values:
 - `PORT=5000`
 - `CORS_ORIGIN=http://localhost:5173`
-- `ADMIN_KEY=your-secret-admin-key`
+- `ADMIN_USERNAME=owner`
+- `ADMIN_PASSWORD=your-secure-password`
+- `ADMIN_SESSION_SECRET=your-long-random-secret`
 
 ## Run With Docker
 ```bash
@@ -54,7 +56,8 @@ docker compose up --build
 - `GET /api/health`
 - `GET /api/doctors`
 - `GET /api/appointments?phone=9876543210`
-- `GET /api/admin/appointments` with header `x-admin-key: your-secret-admin-key`
+- `POST /api/admin/login`
+- `GET /api/admin/appointments` with `Authorization: Bearer <token>`
 - `POST /api/appointments`
 
 ### `POST /api/appointments` body
@@ -75,7 +78,7 @@ docker compose up --build
 1. Push this repo to GitHub.
 2. In Render, create a Blueprint and point to this repo.
 3. Render will pick `render.yaml` and provision both services.
-4. Set `ADMIN_KEY` in Render backend environment variables.
+4. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` in Render backend environment variables.
 5. Update `CORS_ORIGIN` and `VITE_API_URL` values to your real domains.
 
 ### Option B: Vercel (frontend) + Render/Railway (backend)
@@ -83,4 +86,4 @@ docker compose up --build
 2. In Vercel, deploy `frontend/`.
 3. Set `VITE_API_URL` in Vercel env to backend URL.
 4. Set backend `CORS_ORIGIN` to Vercel frontend domain.
-5. Set backend `ADMIN_KEY` and use that same key inside the frontend admin panel.
+5. Owner logs into the frontend admin panel using the backend `ADMIN_USERNAME` and `ADMIN_PASSWORD`.

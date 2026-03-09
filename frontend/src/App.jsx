@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const ADMIN_TOKEN_KEY = "carepoint_admin_token";
+const ADMIN_NAME_KEY = "carepoint_admin_name";
 
 const emptyForm = {
   patientName: "",
@@ -21,7 +23,9 @@ export default function App() {
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupResult, setLookupResult] = useState("");
   const [patientAppointments, setPatientAppointments] = useState([]);
-  const [adminKey, setAdminKey] = useState("");
+  const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
+  const [adminToken, setAdminToken] = useState("");
+  const [adminName, setAdminName] = useState("");
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminResult, setAdminResult] = useState("");
   const [adminAppointments, setAdminAppointments] = useState([]);
@@ -41,6 +45,22 @@ export default function App() {
 
     loadDoctors();
   }, []);
+
+  useEffect(() => {
+    const savedToken = window.localStorage.getItem(ADMIN_TOKEN_KEY) || "";
+    const savedName = window.localStorage.getItem(ADMIN_NAME_KEY) || "";
+
+    if (savedToken) {
+      setAdminToken(savedToken);
+      setAdminName(savedName);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (adminToken) {
+      loadAdminAppointments(adminToken);
+    }
+  }, [adminToken]);
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -96,16 +116,14 @@ export default function App() {
     }
   }
 
-  async function handleAdminLoad(e) {
-    e.preventDefault();
+  async function loadAdminAppointments(token) {
     setAdminLoading(true);
     setAdminResult("");
-    setAdminAppointments([]);
 
     try {
       const res = await fetch(`${API_URL}/api/admin/appointments`, {
         headers: {
-          "x-admin-key": adminKey
+          Authorization: `Bearer ${token}`
         }
       });
       const data = await res.json();
@@ -118,10 +136,48 @@ export default function App() {
       setAdminAppointments(sorted);
       setAdminResult(`Loaded ${sorted.length} appointment${sorted.length === 1 ? "" : "s"}.`);
     } catch (err) {
+      handleAdminLogout();
       setAdminResult(err.message || "Could not load admin dashboard");
     } finally {
       setAdminLoading(false);
     }
+  }
+
+  async function handleAdminLogin(e) {
+    e.preventDefault();
+    setAdminLoading(true);
+    setAdminResult("");
+
+    try {
+      const res = await fetch(`${API_URL}/api/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adminCredentials)
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      window.localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+      window.localStorage.setItem(ADMIN_NAME_KEY, data.adminName || adminCredentials.username);
+      setAdminToken(data.token);
+      setAdminName(data.adminName || adminCredentials.username);
+      setAdminCredentials({ username: "", password: "" });
+    } catch (err) {
+      setAdminResult(err.message || "Login failed");
+    } finally {
+      setAdminLoading(false);
+    }
+  }
+
+  function handleAdminLogout() {
+    window.localStorage.removeItem(ADMIN_TOKEN_KEY);
+    window.localStorage.removeItem(ADMIN_NAME_KEY);
+    setAdminToken("");
+    setAdminName("");
+    setAdminAppointments([]);
   }
 
   return (
@@ -137,7 +193,7 @@ export default function App() {
             </p>
             <div className="hero-actions">
               <a href="#book" className="cta">Book Consultation</a>
-              <a href="#admin" className="ghost-cta">Open Admin Panel</a>
+              <a href="#admin" className="ghost-cta">Owner Dashboard</a>
             </div>
           </div>
           <div className="hero-badge">
@@ -254,51 +310,74 @@ export default function App() {
         <section className="panel admin-panel" id="admin">
           <div className="section-head">
             <div>
-              <p className="section-tag">Clinic Admin</p>
-              <h2>Appointment Dashboard</h2>
+              <p className="section-tag">Clinic Owner</p>
+              <h2>Admin Dashboard</h2>
             </div>
-            <p>Protected by an admin key from backend environment variables.</p>
+            <p>{adminToken ? `Logged in as ${adminName}` : "Login required for appointment access."}</p>
           </div>
-          <form onSubmit={handleAdminLoad} className="admin-form">
-            <input
-              type="password"
-              placeholder="Enter admin key"
-              value={adminKey}
-              onChange={(e) => setAdminKey(e.target.value)}
-            />
-            <button type="submit" disabled={adminLoading}>
-              {adminLoading ? "Loading..." : "Load Dashboard"}
-            </button>
-          </form>
+
+          {!adminToken ? (
+            <form onSubmit={handleAdminLogin} className="admin-form">
+              <input
+                required
+                placeholder="Admin username"
+                value={adminCredentials.username}
+                onChange={(e) => setAdminCredentials({ ...adminCredentials, username: e.target.value })}
+              />
+              <input
+                required
+                type="password"
+                placeholder="Admin password"
+                value={adminCredentials.password}
+                onChange={(e) => setAdminCredentials({ ...adminCredentials, password: e.target.value })}
+              />
+              <button type="submit" disabled={adminLoading}>
+                {adminLoading ? "Signing in..." : "Login to Dashboard"}
+              </button>
+            </form>
+          ) : (
+            <div className="admin-toolbar">
+              <button type="button" onClick={() => loadAdminAppointments(adminToken)} disabled={adminLoading}>
+                {adminLoading ? "Refreshing..." : "Refresh Appointments"}
+              </button>
+              <button type="button" className="secondary-button" onClick={handleAdminLogout}>
+                Logout
+              </button>
+            </div>
+          )}
+
           {adminResult ? <p className="result">{adminResult}</p> : null}
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Patient</th>
-                  <th>Doctor</th>
-                  <th>Date</th>
-                  <th>Phone</th>
-                  <th>Email</th>
-                  <th>Message</th>
-                  <th>Created</th>
-                </tr>
-              </thead>
-              <tbody>
-                {adminAppointments.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.patientName}</td>
-                    <td>{item.doctorName}</td>
-                    <td>{item.date}</td>
-                    <td>{item.phone}</td>
-                    <td>{item.email || "-"}</td>
-                    <td>{item.message || "-"}</td>
-                    <td>{new Date(item.createdAt).toLocaleString()}</td>
+
+          {adminToken ? (
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Created</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {adminAppointments.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.patientName}</td>
+                      <td>{item.doctorName}</td>
+                      <td>{item.date}</td>
+                      <td>{item.phone}</td>
+                      <td>{item.email || "-"}</td>
+                      <td>{item.message || "-"}</td>
+                      <td>{new Date(item.createdAt).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
         </section>
       </main>
     </div>

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import crypto from "node:crypto";
 import { readAppointments, saveAppointment } from "./dataStore.js";
 
 dotenv.config();
@@ -8,7 +9,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
-const ADMIN_KEY = process.env.ADMIN_KEY || "";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
+const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "change-this-session-secret";
+const TOKEN_EXPIRY_MS = 1000 * 60 * 60 * 12;
 
 const doctors = [
   {
@@ -40,6 +44,59 @@ const doctors = [
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
+function createSignature(value) {
+  return crypto
+    .createHmac("sha256", ADMIN_SESSION_SECRET)
+    .update(value)
+    .digest("hex");
+}
+
+function createAdminToken() {
+  const payload = {
+    role: "admin",
+    exp: Date.now() + TOKEN_EXPIRY_MS
+  };
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = createSignature(encodedPayload);
+  return `${encodedPayload}.${signature}`;
+}
+
+function verifyAdminToken(token) {
+  if (!token) {
+    return false;
+  }
+
+  const [encodedPayload, signature] = token.split(".");
+  if (!encodedPayload || !signature) {
+    return false;
+  }
+
+  const expectedSignature = createSignature(encodedPayload);
+  if (signature.length !== expectedSignature.length) {
+    return false;
+  }
+
+  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+    return false;
+  }
+
+  try {
+    const payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
+    return payload.role === "admin" && payload.exp > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function getBearerToken(req) {
+  const authHeader = req.headers.authorization?.toString() || "";
+  if (!authHeader.startsWith("Bearer ")) {
+    return "";
+  }
+
+  return authHeader.slice("Bearer ".length).trim();
+}
+
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "doctor-backend" });
 });
@@ -59,10 +116,26 @@ app.get("/api/appointments", (req, res) => {
   return res.json(all.filter((item) => item.phone === phone));
 });
 
-app.get("/api/admin/appointments", (req, res) => {
-  const adminKey = req.headers["x-admin-key"]?.toString().trim();
+app.post("/api/admin/login", (req, res) => {
+  const { username, password } = req.body;
 
-  if (!ADMIN_KEY || adminKey !== ADMIN_KEY) {
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+    return res.status(500).json({ error: "Admin login is not configured" });
+  }
+
+  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Invalid username or password" });
+  }
+
+  return res.json({
+    token: createAdminToken(),
+    adminName: ADMIN_USERNAME
+  });
+});
+
+app.get("/api/admin/appointments", (req, res) => {
+  const token = getBearerToken(req);
+  if (!verifyAdminToken(token)) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
