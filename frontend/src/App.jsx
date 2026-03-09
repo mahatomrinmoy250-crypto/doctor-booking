@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { clinicContent } from "./content";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const ADMIN_TOKEN_KEY = "carepoint_admin_token";
@@ -13,27 +14,6 @@ const emptyForm = {
   message: ""
 };
 
-const services = [
-  {
-    title: "Primary and Specialist Care",
-    copy: "Fast routing to trusted clinicians with a refined digital intake experience."
-  },
-  {
-    title: "Preventive Health Planning",
-    copy: "Screenings, checkups, and continuity programs for long-term wellness."
-  },
-  {
-    title: "Follow-Up Coordination",
-    copy: "A calmer path from first visit to next appointment with fewer patient touchpoints."
-  }
-];
-
-const trustItems = [
-  "Specialist-led consultations",
-  "Same-site patient booking and lookup",
-  "Private owner dashboard for operations"
-];
-
 function getCurrentView() {
   return window.location.pathname.toLowerCase() === "/admin" ? "admin" : "home";
 }
@@ -42,6 +22,14 @@ function navigateTo(path, setView) {
   window.history.pushState({}, "", path);
   setView(getCurrentView());
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function formatPhoneLabel(label) {
+  return label;
+}
+
+function getDepartmentHighlights(doctors, department) {
+  return doctors.filter((doctor) => doctor.department === department);
 }
 
 export default function App() {
@@ -109,6 +97,8 @@ export default function App() {
   const todayDate = new Date().toISOString().split("T")[0];
   const todayAppointments = adminAppointments.filter((item) => item.date === todayDate);
   const upcomingAppointments = adminAppointments.filter((item) => item.date >= todayDate);
+  const ophthalmologyDoctors = getDepartmentHighlights(doctors, "Ophthalmology");
+  const maternityDoctors = getDepartmentHighlights(doctors, "Maternity & Gynecology");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -224,182 +214,351 @@ export default function App() {
     setAdminAppointments([]);
   }
 
+  function renderUtilityBar() {
+    return (
+      <div className="utility-bar">
+        <div className="utility-group">
+          <span>{clinicContent.rating}</span>
+          <small>{clinicContent.ratingNote}</small>
+        </div>
+        <div className="utility-group">
+          <span>{clinicContent.timings.weekdays}</span>
+          <small>{clinicContent.timings.sunday}</small>
+        </div>
+        <div className="utility-group utility-group-actions">
+          <a href={clinicContent.contact.phonePrimaryHref}>{clinicContent.contact.phonePrimary}</a>
+          <a href={clinicContent.contact.phoneSecondaryHref}>{clinicContent.contact.phoneSecondary}</a>
+        </div>
+      </div>
+    );
+  }
+
+  function renderDepartmentFeature(department) {
+    return (
+      <article key={department.name} className="department-card">
+        <p className="eyebrow">{department.label}</p>
+        <h3>{department.name}</h3>
+        <p className="department-copy">{department.description}</p>
+        <ul className="detail-list">
+          {department.bullets.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </article>
+    );
+  }
+
+  function renderDoctorCard(doctor) {
+    return (
+      <article key={doctor.id} className="doctor-card">
+        <div className="doctor-card-media">
+          <img src={doctor.image} alt={doctor.name} loading="lazy" />
+        </div>
+        <div className="doctor-copy">
+          <p className="doctor-tag">{doctor.department}</p>
+          <h3>{doctor.name}</h3>
+          <p className="doctor-title">{doctor.title}</p>
+          <p className="doctor-qualifications">{doctor.qualifications}</p>
+          <p>{doctor.summary}</p>
+          <div className="doctor-meta">
+            <span>{doctor.experience}</span>
+            <span>{doctor.availability}</span>
+          </div>
+          <div className="chip-row">
+            {doctor.specialties.map((specialty) => (
+              <span key={specialty} className="soft-chip">{specialty}</span>
+            ))}
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   function renderPublicSite() {
     return (
       <div className="shell">
-        <div className="ambient ambient-one" />
-        <div className="ambient ambient-two" />
+        <div className="page-glow page-glow-left" />
+        <div className="page-glow page-glow-right" />
 
-        <header className="topbar">
-          <a href="#home" className="brandmark">
-            <span className="brandmark-chip">CP</span>
-            <span>
-              <strong>CarePoint Clinic</strong>
-              <small>Private multispecialty practice</small>
-            </span>
-          </a>
-          <nav className="topnav">
-            <a href="#specialists">Specialists</a>
-            <a href="#booking">Book</a>
-            <a href="#lookup">Track</a>
-          </nav>
+        <header className="site-header">
+          {renderUtilityBar()}
+          <div className="topbar">
+            <a href="#home" className="brandmark">
+              <span className="brandmark-chip">SN</span>
+              <span>
+                <strong>{clinicContent.name}</strong>
+                <small>New Baradwari, Jamshedpur</small>
+              </span>
+            </a>
+            <nav className="topnav">
+              <a href="#departments">Departments</a>
+              <a href="#doctors">Doctors</a>
+              <a href="#reviews">Reviews</a>
+              <a href="#contact">Contact</a>
+            </nav>
+          </div>
         </header>
 
         <main>
-          <section className="hero-shell" id="home">
-            <div className="hero-intro">
-              <p className="eyebrow">CarePoint Clinic</p>
-              <h1>Calm, modern care with a booking experience patients can trust.</h1>
-              <p className="lead">
-                A premium clinic website that feels professional from the first screen:
-                clean specialist discovery, direct online booking, and simple appointment lookup.
-              </p>
+          <section className="hero-shell reveal-rise" id="home">
+            <div className="hero-copy">
+              <p className="eyebrow">{clinicContent.hero.eyebrow}</p>
+              <h1>{clinicContent.hero.title}</h1>
+              <p className="lead">{clinicContent.hero.description}</p>
               <div className="hero-actions">
                 <a href="#booking" className="button-primary">Book Consultation</a>
-                <a href="#specialists" className="button-secondary">View Doctors</a>
+                <a href={clinicContent.contact.whatsappHref} className="button-secondary" target="_blank" rel="noreferrer">
+                  WhatsApp Us
+                </a>
+                <a href={clinicContent.contact.phonePrimaryHref} className="button-secondary">
+                  Call {formatPhoneLabel(clinicContent.contact.phonePrimary)}
+                </a>
+              </div>
+              <div className="hero-note">
+                <span>{clinicContent.address.landmark}</span>
+                <a href={clinicContent.address.directionsHref} target="_blank" rel="noreferrer">
+                  Get Directions
+                </a>
               </div>
             </div>
 
-            <div className="hero-side">
-              <article className="trust-panel">
-                <p className="eyebrow">Why It Works</p>
-                <ul className="trust-list">
-                  {trustItems.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+            <div className="hero-aside">
+              <article className="editorial-panel">
+                <p className="eyebrow">A Trust Story Built Locally</p>
+                <h2>Two specialist verticals, one polished patient experience.</h2>
+                <p>
+                  Patients discover eye surgery outcomes, pregnancy support, and clearer communication
+                  in a clinic experience designed to feel steady from first inquiry to follow-up.
+                </p>
               </article>
-              <article className="micro-stats">
-                <div>
-                  <strong>15+</strong>
-                  <span>years of trust</span>
-                </div>
-                <div>
-                  <strong>12k</strong>
-                  <span>consultations</span>
-                </div>
-                <div>
-                  <strong>4.9/5</strong>
-                  <span>patient rating</span>
-                </div>
-              </article>
+
+              <div className="hero-stats-grid">
+                {clinicContent.stats.map((item) => (
+                  <article key={item.label} className="stat-card">
+                    <strong>{item.value}</strong>
+                    <span>{item.label}</span>
+                    <small>{item.detail}</small>
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
 
-          <section className="info-band">
-            {services.map((service) => (
-              <article key={service.title} className="info-card">
-                <h2>{service.title}</h2>
-                <p>{service.copy}</p>
+          <section className="trust-strip reveal-fade">
+            {clinicContent.trustHighlights.map((item) => (
+              <article key={item} className="trust-strip-card">
+                <span className="trust-dot" />
+                <p>{item}</p>
               </article>
             ))}
           </section>
 
-          <section className="specialists-panel" id="specialists">
+          <section className="department-shell reveal-rise" id="departments">
+            <div className="section-header">
+              <div>
+                <p className="eyebrow">Flagship Departments</p>
+                <h2>Built around sharper diagnostics, gentler communication, and visible clinical trust.</h2>
+              </div>
+              <p className="section-meta">
+                Equal focus on ophthalmology and maternity care under one premium clinic identity.
+              </p>
+            </div>
+
+            <div className="department-grid">
+              {clinicContent.departments.map((department) => renderDepartmentFeature(department))}
+            </div>
+          </section>
+
+          <section className="specialists-panel reveal-rise" id="doctors">
             <div className="section-header">
               <div>
                 <p className="eyebrow">Clinical Team</p>
-                <h2>Specialists presented with clearer hierarchy and stronger trust.</h2>
+                <h2>Specialist-led care anchored by the clinic's two visible faces.</h2>
               </div>
               <p className="section-meta">
-                {loadingDoctors ? "Loading doctors..." : `${doctors.length} specialists available`}
+                {loadingDoctors
+                  ? "Loading doctor profiles..."
+                  : `${ophthalmologyDoctors.length} eye specialist and ${maternityDoctors.length} women's health specialist profiles`}
               </p>
             </div>
 
             <div className="doctor-grid">
-              {doctors.map((doctor) => (
-                <article key={doctor.id} className="doctor-card">
-                  <img src={doctor.image} alt={doctor.name} loading="lazy" />
-                  <div className="doctor-copy">
-                    <p className="doctor-tag">{doctor.specialty}</p>
-                    <h3>{doctor.name}</h3>
-                    <p>{doctor.experience} of focused experience</p>
-                    <span>{doctor.availability}</span>
-                  </div>
+              {doctors.map((doctor) => renderDoctorCard(doctor))}
+            </div>
+          </section>
+
+          <section className="services-shell reveal-rise">
+            <div className="section-header">
+              <div>
+                <p className="eyebrow">Care Highlights</p>
+                <h2>What patients should expect from the website and the clinic experience.</h2>
+              </div>
+              <p className="section-meta">Service themes are grounded in the research you supplied.</p>
+            </div>
+
+            <div className="services-grid">
+              {clinicContent.serviceCards.map((service) => (
+                <article key={service.title} className="service-card">
+                  <h3>{service.title}</h3>
+                  <p>{service.copy}</p>
                 </article>
               ))}
             </div>
           </section>
 
-          <section className="portal-grid">
-            <section className="workspace-card booking-card" id="booking">
-              <div className="section-header compact">
-                <div>
-                  <p className="eyebrow">Patient Booking</p>
-                  <h2>Request an Appointment</h2>
-                </div>
-                <p className="section-meta">Simple intake, no clutter</p>
+          <section className="testimonials-shell reveal-rise" id="reviews">
+            <div className="section-header">
+              <div>
+                <p className="eyebrow">Reviews and Reputation</p>
+                <h2>Paraphrased proof points that reinforce real experiences without sounding generic.</h2>
               </div>
-              <form onSubmit={handleSubmit} className="booking-form">
-                <input
-                  required
-                  placeholder="Patient name"
-                  value={form.patientName}
-                  onChange={(e) => setForm({ ...form, patientName: e.target.value })}
-                />
-                <input
-                  required
-                  placeholder="Phone number"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                />
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                />
-                <select
-                  required
-                  value={form.doctorId}
-                  onChange={(e) => setForm({ ...form, doctorId: e.target.value })}
-                >
-                  <option value="">Choose specialist</option>
-                  {doctors.map((doc) => (
-                    <option key={doc.id} value={doc.id}>{doc.name} - {doc.specialty}</option>
-                  ))}
-                </select>
-                <input
-                  required
-                  type="date"
-                  min={nextAvailableDate}
-                  value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                />
-                <textarea
-                  rows="4"
-                  placeholder="Briefly describe the concern"
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                />
-                <button type="submit" className="full-width" disabled={submitting}>
-                  {submitting ? "Booking..." : "Confirm Appointment"}
-                </button>
-              </form>
-              {result ? <p className="result">{result}</p> : null}
-            </section>
+              <p className="section-meta">A mix of ratings, review themes, and visible patient stories.</p>
+            </div>
 
-            <section className="workspace-card lookup-card" id="lookup">
+            <div className="testimonial-grid">
+              {clinicContent.testimonials.map((item) => (
+                <article key={item.name} className="testimonial-card">
+                  <strong>{item.name}</strong>
+                  <p>{item.quote}</p>
+                  <small>{item.source}</small>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="contact-shell reveal-rise" id="contact">
+            <div className="contact-grid">
+              <section className="workspace-card booking-card" id="booking">
+                <div className="section-header compact">
+                  <div>
+                    <p className="eyebrow">Appointments</p>
+                    <h2>Request a consultation with the right specialist.</h2>
+                  </div>
+                  <p className="section-meta">Form request plus direct call and WhatsApp options</p>
+                </div>
+
+                <div className="contact-chip-row">
+                  <a className="soft-chip soft-chip-link" href={clinicContent.contact.phonePrimaryHref}>
+                    Call {clinicContent.contact.phonePrimary}
+                  </a>
+                  <a className="soft-chip soft-chip-link" href={clinicContent.contact.phoneSecondaryHref}>
+                    Call {clinicContent.contact.phoneSecondary}
+                  </a>
+                  <a
+                    className="soft-chip soft-chip-link"
+                    href={clinicContent.contact.whatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+
+                <form onSubmit={handleSubmit} className="booking-form">
+                  <input
+                    required
+                    placeholder="Patient name"
+                    value={form.patientName}
+                    onChange={(e) => setForm({ ...form, patientName: e.target.value })}
+                  />
+                  <input
+                    required
+                    placeholder="Phone number"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
+                  <select
+                    required
+                    value={form.doctorId}
+                    onChange={(e) => setForm({ ...form, doctorId: e.target.value })}
+                  >
+                    <option value="">Choose specialist</option>
+                    {doctors.map((doc) => (
+                      <option key={doc.id} value={doc.id}>
+                        {doc.name} - {doc.department}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    required
+                    type="date"
+                    min={nextAvailableDate}
+                    value={form.date}
+                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                  />
+                  <textarea
+                    rows="4"
+                    placeholder="Tell us about the concern or visit purpose"
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  />
+                  <button type="submit" className="full-width" disabled={submitting}>
+                    {submitting ? "Booking..." : "Confirm Appointment"}
+                  </button>
+                </form>
+                {result ? <p className="result">{result}</p> : null}
+              </section>
+
+              <section className="contact-stack">
+                <article className="info-panel">
+                  <p className="eyebrow">Visit the Clinic</p>
+                  <h2>Find us easily in New Baradwari.</h2>
+                  <p>{clinicContent.address.line}</p>
+                  <div className="detail-group">
+                    <span>{clinicContent.timings.weekdays}</span>
+                    <span>{clinicContent.timings.sunday}</span>
+                  </div>
+                  <div className="contact-links">
+                    <a href={clinicContent.contact.instagram} target="_blank" rel="noreferrer">Instagram</a>
+                    <a href={clinicContent.contact.facebook} target="_blank" rel="noreferrer">Facebook</a>
+                    <a href={clinicContent.address.directionsHref} target="_blank" rel="noreferrer">Directions</a>
+                  </div>
+                </article>
+
+                <article className="map-card">
+                  <iframe
+                    title="Sarada Netralaya & Maternity Map"
+                    src={clinicContent.address.mapEmbed}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </article>
+              </section>
+            </div>
+          </section>
+
+          <section className="lookup-shell reveal-fade">
+            <section className="utility-card" id="lookup">
               <div className="section-header compact">
                 <div>
-                  <p className="eyebrow">Booking Lookup</p>
-                  <h2>Check My Appointment</h2>
+                  <p className="eyebrow">Patient Utility</p>
+                  <h2>{clinicContent.lookup.title}</h2>
                 </div>
-                <p className="section-meta">Verify by phone number</p>
+                <p className="section-meta">A quieter utility flow kept available near the footer.</p>
               </div>
-              <form onSubmit={handlePatientLookup} className="booking-form">
+
+              <p className="lookup-copy">{clinicContent.lookup.description}</p>
+
+              <form onSubmit={handlePatientLookup} className="booking-form inline-form">
                 <input
                   required
                   placeholder="Enter phone number"
                   value={lookupPhone}
                   onChange={(e) => setLookupPhone(e.target.value)}
                 />
-                <button type="submit" className="full-width" disabled={lookupLoading}>
+                <button type="submit" disabled={lookupLoading}>
                   {lookupLoading ? "Checking..." : "Find Appointment"}
                 </button>
               </form>
+
               {lookupResult ? <p className="result">{lookupResult}</p> : null}
-              <div className="appointment-list">
+              <div className="appointment-list compact-list">
                 {patientAppointments.map((item) => (
                   <article key={item.id} className="appointment-card">
                     <div className="appointment-row">
@@ -417,12 +576,20 @@ export default function App() {
 
         <footer className="site-footer">
           <div>
-            <strong>CarePoint Clinic</strong>
-            <p>Private, specialist-led care with a modern patient experience.</p>
+            <strong>{clinicContent.name}</strong>
+            <p>{clinicContent.address.line}</p>
           </div>
-          <button type="button" className="staff-link" onClick={() => navigateTo("/admin", setView)}>
-            Staff access
-          </button>
+          <div className="footer-meta">
+            <span>{clinicContent.timings.weekdays}</span>
+            <span>{clinicContent.timings.sunday}</span>
+            <div className="footer-links">
+              <a href={clinicContent.contact.phonePrimaryHref}>{clinicContent.contact.phonePrimary}</a>
+              <a href={clinicContent.contact.phoneSecondaryHref}>{clinicContent.contact.phoneSecondary}</a>
+              <button type="button" className="staff-link" onClick={() => navigateTo("/admin", setView)}>
+                Staff access
+              </button>
+            </div>
+          </div>
         </footer>
       </div>
     );
@@ -431,12 +598,15 @@ export default function App() {
   function renderAdminSite() {
     return (
       <div className="shell admin-shell">
+        <div className="page-glow page-glow-left" />
+        <div className="page-glow page-glow-right" />
+
         <div className="admin-layout">
           <aside className="admin-sidebar">
             <div className="admin-brand">
-              <span className="brandmark-chip">CP</span>
+              <span className="brandmark-chip">SN</span>
               <div>
-                <strong>CarePoint Ops</strong>
+                <strong>{clinicContent.admin.brand}</strong>
                 <small>Owner console</small>
               </div>
             </div>
@@ -450,9 +620,9 @@ export default function App() {
             </div>
 
             <div className="admin-sidebar-block">
-              <span className="sidebar-label">Status</span>
-              <div className="status-chip">{adminToken ? `Signed in as ${adminName}` : "Login required"}</div>
-              <div className="status-note">Private operations area for the clinic owner only.</div>
+              <span className="sidebar-label">Clinic</span>
+              <div className="status-chip">{clinicContent.shortName}</div>
+              <div className="status-note">{clinicContent.admin.description}</div>
             </div>
           </aside>
 
@@ -460,9 +630,9 @@ export default function App() {
             <section className="admin-header">
               <div>
                 <p className="eyebrow">Owner Dashboard</p>
-                <h1>Bookings, daily overview, and operational visibility.</h1>
+                <h1>Bookings, daily overview, and patient operations in one place.</h1>
                 <p className="lead admin-lead">
-                  Enterprise-style dashboard layout with separate login and data workspace.
+                  Same functionality as before, redesigned to match the new clinic identity.
                 </p>
               </div>
               <div className="admin-header-actions">
@@ -488,7 +658,7 @@ export default function App() {
                 <section className="admin-panel admin-login-panel">
                   <div className="panel-head">
                     <h2>Sign In</h2>
-                    <p>Use owner credentials to open the operations console.</p>
+                    <p>Use owner credentials to open the appointment workspace.</p>
                   </div>
                   <form onSubmit={handleAdminLogin} className="admin-form">
                     <input
@@ -513,8 +683,8 @@ export default function App() {
 
                 <section className="admin-panel admin-preview-panel">
                   <div className="panel-head">
-                    <h2>Owner View</h2>
-                    <p>After login the owner sees KPI cards, today's bookings, and the full appointment register.</p>
+                    <h2>Operational Snapshot</h2>
+                    <p>Appointment visibility, today's bookings, and patient records remain unchanged functionally.</p>
                   </div>
                   <div className="preview-stack">
                     <div className="preview-metric">
@@ -522,11 +692,11 @@ export default function App() {
                       <strong>Live</strong>
                     </div>
                     <div className="preview-metric">
-                      <span>Upcoming</span>
+                      <span>Upcoming appointments</span>
                       <strong>Tracked</strong>
                     </div>
                     <div className="preview-metric">
-                      <span>Patient details</span>
+                      <span>Patient contact details</span>
                       <strong>Visible</strong>
                     </div>
                   </div>
@@ -538,17 +708,17 @@ export default function App() {
                   <article className="kpi-card">
                     <span>Total bookings</span>
                     <strong>{adminAppointments.length}</strong>
-                    <small>All requests in the system</small>
+                    <small>All requests stored in the system</small>
                   </article>
                   <article className="kpi-card">
                     <span>Today</span>
                     <strong>{todayAppointments.length}</strong>
-                    <small>Bookings scheduled for today</small>
+                    <small>Appointments scheduled for today</small>
                   </article>
                   <article className="kpi-card">
                     <span>Upcoming</span>
                     <strong>{upcomingAppointments.length}</strong>
-                    <small>Today and future appointments</small>
+                    <small>Today and future appointment requests</small>
                   </article>
                 </section>
 
@@ -558,7 +728,11 @@ export default function App() {
                   <section className="admin-panel today-panel">
                     <div className="panel-head">
                       <h2>Today's Bookings</h2>
-                      <p>{todayAppointments.length ? "Focused schedule for the current day." : "No appointments scheduled for today."}</p>
+                      <p>
+                        {todayAppointments.length
+                          ? "Focused view of today's schedule."
+                          : "No appointments scheduled for today."}
+                      </p>
                     </div>
                     <div className="appointment-list">
                       {todayAppointments.map((item) => (

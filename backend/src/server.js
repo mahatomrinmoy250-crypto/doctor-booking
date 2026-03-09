@@ -17,27 +17,39 @@ const TOKEN_EXPIRY_MS = 1000 * 60 * 60 * 12;
 const doctors = [
   {
     id: 1,
-    name: "Dr. Priya Nair",
-    specialty: "Cardiology",
-    experience: "12 years",
-    availability: "Mon-Sat",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80"
+    name: "Dr. Nitin Dhira",
+    department: "Ophthalmology",
+    specialty: "Eye Specialist",
+    title: "Director and Eye Specialist",
+    qualifications: "Director, Sarada Netralaya & Maternity",
+    experience: "Cataract, squint, and comprehensive eye care",
+    availability: "Mon-Sat and Sunday morning clinic",
+    summary:
+      "Presented by the clinic as the eye specialist and director, with visible emphasis on cataract care, squint treatment, and complete eye-health guidance.",
+    specialties: [
+      "Cataract care",
+      "Squint treatment",
+      "Comprehensive eye checkups"
+    ],
+    image: "https://images.unsplash.com/photo-1614436163996-25cee5f54290?auto=format&fit=crop&w=1200&q=80"
   },
   {
     id: 2,
-    name: "Dr. Arjun Mehta",
-    specialty: "Pediatrics",
-    experience: "9 years",
-    availability: "Mon-Fri",
-    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80"
-  },
-  {
-    id: 3,
-    name: "Dr. Sana Qureshi",
-    specialty: "Dermatology",
-    experience: "11 years",
-    availability: "Tue-Sun",
-    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&w=900&q=80"
+    name: "Dr. Shabnam Kumari Dhira",
+    department: "Maternity & Gynecology",
+    specialty: "Obstetrics and Gynecology",
+    title: "Consultant Gynecologist",
+    qualifications: "MBBS, MD (Obstetrics & Gynecology)",
+    experience: "Pregnancy, delivery, and advanced women's health care",
+    availability: "Mon-Sat and Sunday morning clinic",
+    summary:
+      "Known through patient reviews for supportive pregnancy care, strong communication, and comprehensive women's health treatment including advanced laparoscopic counseling.",
+    specialties: [
+      "Pregnancy care",
+      "Delivery planning",
+      "Laparoscopic gynecology"
+    ],
+    image: "https://images.unsplash.com/photo-1594824475317-d7f0617f0cf7?auto=format&fit=crop&w=1200&q=80"
   }
 ];
 
